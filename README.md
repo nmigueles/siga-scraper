@@ -9,7 +9,15 @@ Herramienta para extraer información del SIGA FRBA de la UTN.
 ### Scrape Cursada
 
 ```js
-// example code implementation.
+// Example
+import sigaScraper from 'siga-scraper';
+// Inicia el cluster de navegadores que realizan el scrape.
+await sigaScraper.start();
+// Logea y guarda la session en el cluster.
+await sigaScraper.login(SIGA_USER, SIGA_PASS);
+// Ejecuta cualquier tarea, en este caso devuelve información de la cursada actual.
+const response = await sigaScraper.scrapeCursada();
+console.log(response); // => [ {...}, {...} ]
 ```
 
 Returns:
