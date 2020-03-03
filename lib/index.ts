@@ -1,5 +1,7 @@
 import { Cluster } from 'puppeteer-cluster';
 
+import errors from './constants/errors';
+
 class sigaScraper {
   private static cluster: Cluster;
   private static isLogged: boolean = false;
@@ -28,24 +30,53 @@ class sigaScraper {
         await page.type('#password', password);
         await page.click('#regularsubmit');
         await page.waitForNavigation({ waitUntil: 'load', timeout: 0 });
-
+        const errorHandlerHTMLSelector = 'div.content > div.alert.alert-danger';
         const success: boolean =
-          (await page.$('div.content > div.alert.alert-danger')) === null;
+          (await page.$(errorHandlerHTMLSelector)) === null;
         return success;
       },
     );
-    if (!success) throw new Error('Las credenciales de logeo son invalidas.');
+    if (!success) throw new Error(errors.invalidCredentialsErrorMessage);
     this.isLogged = true;
   }
 
-  static async scrapeCursada() {
-    if (!this.isLogged)
-      throw new Error('Necesitas estar logeado para ejecutar esta función.');
+  static async scrapeHistorialConsolidado() {
+    if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
 
-    const cursadaURL = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/';
+    const historialConsolidadoPageUrl =
+      'http://siga.frba.utn.edu.ar/alu/hist.do';
 
     return await this.cluster.execute(async ({ page }: { page: any }) => {
-      await page.goto(cursadaURL);
+      await page.goto(historialConsolidadoPageUrl);
+
+      const subjects = await page.evaluate(
+        () =>
+          [
+            ...document.querySelectorAll(
+              'body > div.std-desktop > div.std-desktop-desktop > form > div > div > table > tbody > tr',
+            ),
+          ]
+            .map(e => {
+              const row: string[] = [];
+              [...(e as HTMLElement).querySelectorAll('td')].forEach(b =>
+                row.push(b.innerText),
+              );
+              return row;
+            })
+            .slice(2), // get rid of the header of the table.
+      );
+      return subjects;
+    });
+  }
+
+  static async scrapeCursada() {
+    if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
+
+    const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/';
+
+    return await this.cluster.execute(async ({ page }: { page: any }) => {
+      await page.goto(cursadaPageUrl);
+
       const subjects = await page.evaluate(() =>
         [
           ...document.querySelectorAll(
@@ -95,7 +126,7 @@ class sigaScraper {
 
         // Volver a cursada
         await Promise.all([
-          page.goto(cursadaURL, {
+          page.goto(cursadaPageUrl, {
             waitUntil: 'load',
             timeout: 0,
           }),
