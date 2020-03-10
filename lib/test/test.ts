@@ -6,17 +6,16 @@ dotenv.config();
 const { SIGA_USER, SIGA_PASS } = process.env;
 
 describe('Basic', () => {
-  xtest('Login w/ valid creds', async done => {
+  test('Login and scraping cursada', async done => {
     if (!SIGA_USER || !SIGA_PASS)
       throw new Error('Missing credentials in enviroment.');
     try {
       await sigaScraper.start();
       await sigaScraper.login(SIGA_USER, SIGA_PASS);
 
-      const tareas = [sigaScraper.scrapeCursada()];
-      const [scrapeCursadaResponse] = await Promise.all(tareas);
-      console.log(scrapeCursadaResponse);
-      expect(scrapeCursadaResponse instanceof Array).toBeTruthy();
+      const scrapeResponse = await sigaScraper.scrapeCursadaBasic();
+      console.log(scrapeResponse);
+      expect(scrapeResponse instanceof Array).toBeTruthy();
       done();
     } catch (error) {
       console.log(error);
@@ -24,9 +23,9 @@ describe('Basic', () => {
     }
 
     await sigaScraper.stop();
-  }, 30000);
+  }, 60000);
 
-  test('Login and scraping academic history', async done => {
+  xtest('Login and scraping academic history', async done => {
     try {
       await sigaScraper.start();
       await sigaScraper.login(SIGA_USER!, SIGA_PASS!);
