@@ -98,7 +98,7 @@ Returns:
     acta:
       {
         sede: string,
-        libre: string,
+        libro: string,
         folio: number,
         nota: number | null,
       } | null,
