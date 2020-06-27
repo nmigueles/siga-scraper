@@ -43,8 +43,6 @@ console.log(responseScrapeHistCons); // => [ {...}, {...} ]
 
 ### Scrape Cursada
 
-Work in progress !
-
 ```typescript
 scrapeCursada() : Promise<Curso[]>,
 ```
@@ -77,8 +75,6 @@ Returns:
 ```
 
 ### Scrape Historial Consolidado
-
-Work in progress !
 
 ```typescript
 scrapeHistorialConsolidado() : Promise<RowEntry[]>,

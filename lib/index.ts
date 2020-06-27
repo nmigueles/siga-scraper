@@ -119,6 +119,7 @@ class sigaScraper {
         const dias: number[] = [];
         const horas: string[] = [];
         const horasT: string[] = [];
+
         let turno: string = '';
 
         fechas.forEach(f => {
