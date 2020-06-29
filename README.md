@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://img.shields.io/npm/v/siga-scraper.svg)](https://www.npmjs.com/package/siga-scraper)
 
-Tool for retrieving information from the SIGA FRBA UTN website.
+Tool to retrieve information from the SIGA FRBA UTN website.
 
 ## Support
 
