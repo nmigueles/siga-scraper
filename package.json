@@ -1,7 +1,7 @@
 {
   "name": "siga-scraper",
   "version": "1.0.0",
-  "description": "Tool to scrape information from the SIGA FRBA UTN system.",
+  "description": "Tool to scrape information from SIGA FRBA UTN.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -16,8 +16,15 @@
     "UTN",
     "SIGA",
     "scrape",
-    "FRBA"
+    "scraper",
+    "FRBA",
+    "Universidad Tecnológica Nacional",
+    "siga",
+    "siga-scraper"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "author": {
     "name": "Nicolás Migueles",
     "email": "nicolasmigueles99@gmail.com"
@@ -41,6 +48,7 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
+    "@types/puppeteer": "^3.0.1",
     "puppeteer": "^2.1.1",
     "puppeteer-cluster": "^0.19.0"
   }

@@ -17,7 +17,7 @@ interface Course {
   sede: string;
 }
 
-class sigaScraper {
+export default class sigaScraper {
   private static cluster: Cluster;
   private static isLogged: boolean = false;
 
@@ -71,9 +71,9 @@ class sigaScraper {
               'body > div.std-desktop > div.std-desktop-desktop > form > div > div > table > tbody > tr',
             ),
           ]
-            .map(e => {
+            .map((e) => {
               const row: string[] = [];
-              [...(e as HTMLElement).querySelectorAll('td')].forEach(b =>
+              [...(e as HTMLElement).querySelectorAll('td')].forEach((b) =>
                 row.push(b.innerText),
               );
               return row;
@@ -99,7 +99,7 @@ class sigaScraper {
           ),
         ]
           .filter((a, i) => i % 2)
-          .map(a => [
+          .map((a) => [
             ...(a as HTMLElement).innerText!.trim().split('\t'),
             (a.children[6] as HTMLElement).style.backgroundColor,
           ]),
@@ -122,7 +122,7 @@ class sigaScraper {
 
         let turno: string = '';
 
-        fechas.forEach(f => {
+        fechas.forEach((f) => {
           const [
             _,
             diaCorto,
@@ -176,8 +176,9 @@ class sigaScraper {
           const name = `${
             (e as HTMLElement).onclick!.toString().split(`'`)[5]
           }`;
-          const selector = `tbody > tr:nth-child(${2 * i +
-            3}) > td > span:nth-child(2) > a`;
+          const selector = `tbody > tr:nth-child(${
+            2 * i + 3
+          }) > td > span:nth-child(2) > a`;
           return { name, selector };
         }),
       );
@@ -202,7 +203,7 @@ class sigaScraper {
             parciales.forEach((instancia, i) => {
               const nota = notasSpans
                 .slice(i * 11, (i + 1) * 11)
-                .filter(n => n.children[0].classList.contains('bold'));
+                .filter((n) => n.children[0].classList.contains('bold'));
               if (nota.length > 0) {
                 res[instancia] =
                   Number((nota[0] as HTMLElement).innerText.trim()) || 0;
@@ -232,5 +233,3 @@ class sigaScraper {
     });
   }
 }
-
-export default sigaScraper;
