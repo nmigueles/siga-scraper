@@ -52,7 +52,7 @@ main();
 ### Scrape Cursada
 
 ```typescript
-Method scrapeNotas : Promise<Course[]>,
+Method scrapeCursada : Promise<Course[]>,
 ```
 
 Returns:
