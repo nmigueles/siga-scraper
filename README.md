@@ -128,6 +128,10 @@ async function main() {
 main();
 ```
 
+# Contribute
+
+Pull request are open and welcome.
+
 # License
 
 - [MIT License.](https://github.com/nicomigueles/siga-scraper/blob/master/license)
