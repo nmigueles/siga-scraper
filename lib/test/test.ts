@@ -6,7 +6,7 @@ dotenv.config();
 const { SIGA_USER, SIGA_PASS } = process.env;
 
 describe('Basic', () => {
-  test('Login and scraping cursada', async (done) => {
+  xtest('Login and scraping cursada', async (done) => {
     if (!SIGA_USER || !SIGA_PASS)
       throw new Error('Missing credentials in enviroment.');
     try {
