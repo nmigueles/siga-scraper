@@ -8,8 +8,12 @@ Tool to retrieve information from the SIGA FRBA UTN website.
 
 [![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/nicomigueles)
 
-## Methods
+## Instalation
 
+`npm i siga-scraper`
+
+
+## Methods
 - [Scrape Cursada](https://github.com/NicoMigueles/siga-scraper#scrape-cursada)
 - [Scrape Notas](https://github.com/NicoMigueles/siga-scraper#scrape-notas)
 
