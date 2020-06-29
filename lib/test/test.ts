@@ -5,17 +5,45 @@ dotenv.config();
 
 const { SIGA_USER, SIGA_PASS } = process.env;
 
-describe('Basic', () => {
-  test('Scrape notas', async (done) => {
-    if (!SIGA_USER || !SIGA_PASS)
-      throw new Error('Missing credentials in enviroment.');
+describe('Scrape Cursada', () => {
+  test('Deberia devolver un array de con informacion acerca asignaturas.', async (done) => {
     try {
       await sigaScraper.start();
-      await sigaScraper.login(SIGA_USER, SIGA_PASS);
 
-      const scrapeResponse = await sigaScraper.scrapeNotas();
-      console.log(scrapeResponse);
+      const expected = [
+        {
+          courseId: '950703',
+          curso: 'Z2004',
+          nombre: 'Análisis Matemático II',
+          aula: '115',
+          sede: 'Campus',
+          color: '#7A94CF',
+          notas: [],
+          turno: 'Mañana',
+          dia: 3,
+          hora: '8:30',
+          horaT: '12:30',
+        },
+        {
+          courseId: '950606',
+          curso: 'Z2003',
+          nombre: 'Física II',
+          aula: '102',
+          sede: 'Campus',
+          color: '#AF9772',
+          notas: [],
+          turno: 'Mañana',
+          dia: 3,
+          hora: '8:30',
+          horaT: '12:30',
+        },
+      ];
+      const scrapeResponse = await sigaScraper.scrapeCursada();
+      // console.log(JSON.stringify(scrapeResponse, null, 2));
+
       expect(scrapeResponse instanceof Array).toBeTruthy();
+      expect(scrapeResponse).toEqual(expected);
+
       done();
     } catch (error) {
       console.log(error);
@@ -23,5 +51,57 @@ describe('Basic', () => {
     }
 
     await sigaScraper.stop();
+  }, 60000);
+});
+
+describe('Scrape Notas', () => {
+  test('Deberia devolver un array de asignaturas con sus notas.', async (done) => {
+    try {
+      await sigaScraper.start();
+
+      const expected = [
+        {
+          name: 'Análisis Matemático II',
+          notas: [
+            {
+              instancia: 'PP',
+              calificacion: 8,
+            },
+            {
+              instancia: 'SP',
+              calificacion: 8,
+            },
+          ],
+        },
+        {
+          name: 'Física II',
+          notas: [
+            {
+              instancia: 'PP',
+              calificacion: 4,
+            },
+            {
+              instancia: 'PRPP',
+              calificacion: 8,
+            },
+            {
+              instancia: 'SP',
+              calificacion: 8,
+            },
+          ],
+        },
+      ];
+      const scrapeResponse = await sigaScraper.scrapeNotas();
+      // console.log(JSON.stringify(scrapeResponse, null, 2));
+
+      expect(scrapeResponse instanceof Array).toBeTruthy();
+      expect(scrapeResponse).toEqual(expected);
+      done();
+    } catch (error) {
+      console.log(error);
+      done.fail(error);
+    } finally {
+      await sigaScraper.stop();
+    }
   }, 60000);
 });

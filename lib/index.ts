@@ -5,6 +5,8 @@ import { days, hours, shift } from './constants/times';
 
 import { Course, Nota, Notas } from './interfaces';
 
+const isTest: boolean = process.env.NODE_ENV === 'test';
+
 export = class sigaScraper {
   private static cluster: Cluster;
   private static isLogged: boolean = false;
@@ -74,12 +76,14 @@ export = class sigaScraper {
   }
 
   static async scrapeCursada(): Promise<Course[]> {
-    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
+    if (!this.isLogged && !isTest)
+      throw new Error(errors.loginRequiredErrorMessage);
 
-    const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/'; //
+    const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do';
+    const testUrl = 'https://mock-siga-scraper.netlify.app';
 
     return await this.cluster.execute(async ({ page }: { page: any }) => {
-      await page.goto(cursadaPageUrl);
+      await page.goto(isTest ? testUrl : cursadaPageUrl);
       const response: Course[] = [];
       const courses = await page.evaluate(() =>
         [
@@ -149,12 +153,14 @@ export = class sigaScraper {
   }
 
   static async scrapeNotas(): Promise<Notas[]> {
-    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
+    if (!this.isLogged && !isTest)
+      throw new Error(errors.loginRequiredErrorMessage);
 
-    const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/';
+    const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do';
+    const testUrl = 'https://mock-siga-scraper.netlify.app';
 
     return await this.cluster.execute(async ({ page }: { page: any }) => {
-      await page.goto(cursadaPageUrl);
+      await page.goto(isTest ? testUrl : cursadaPageUrl);
 
       const subjects = await page.evaluate(() =>
         [
@@ -204,7 +210,7 @@ export = class sigaScraper {
 
         // Volver a cursada
         await Promise.all([
-          page.goto(cursadaPageUrl, {
+          page.goto(isTest ? testUrl : cursadaPageUrl, {
             waitUntil: 'load',
             timeout: 0,
           }),

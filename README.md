@@ -1,5 +1,9 @@
 # SIGA Scraper
 
+[![Latest Stable Version](https://img.shields.io/npm/v/siga-scraper.svg)](https://www.npmjs.com/package/siga-scraper)
+
+[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg){:height="50%"}](https://cafecito.app/nicomigueles)
+
 Tool for scraping the SIGA FRBA website.
 
 ## Examples
