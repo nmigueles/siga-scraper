@@ -1,9 +1,4 @@
-import * as dotenv from 'dotenv';
 import sigaScraper from '..';
-
-dotenv.config();
-
-const { SIGA_USER, SIGA_PASS } = process.env;
 
 describe('Scrape Cursada', () => {
   test('Deberia devolver un array de con informacion acerca asignaturas.', async (done) => {
@@ -59,6 +54,7 @@ describe('Scrape Notas', () => {
 
       const expected = [
         {
+          courseId: '950703',
           name: 'Análisis Matemático II',
           notas: [
             {
@@ -72,6 +68,7 @@ describe('Scrape Notas', () => {
           ],
         },
         {
+          courseId: '950606',
           name: 'Física II',
           notas: [
             {
@@ -90,6 +87,7 @@ describe('Scrape Notas', () => {
         },
       ];
       const scrapeResponse = await sigaScraper.scrapeNotas();
+
       // console.log(JSON.stringify(scrapeResponse, null, 2));
 
       expect(scrapeResponse instanceof Array).toBeTruthy();

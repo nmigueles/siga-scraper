@@ -16,6 +16,7 @@ export interface Nota {
   calificacion: number; // Nota numerica. 0 .. 10, el 0 representa el ausente.
 }
 export interface Notas {
+  courseId: string;
   name: string;
   notas: Nota[];
 }
