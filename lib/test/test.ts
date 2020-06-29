@@ -14,9 +14,9 @@ describe('Scrape Cursada', () => {
           sede: 'Campus',
           color: '#7A94CF',
           turno: 'Mañana',
-          dia: 3,
-          hora: '8:30',
-          horaT: '12:30',
+          dia: [3],
+          hora: ['8:30'],
+          horaT: ['12:30'],
         },
         {
           courseId: '950606',
@@ -26,9 +26,9 @@ describe('Scrape Cursada', () => {
           sede: 'Campus',
           color: '#AF9772',
           turno: 'Mañana',
-          dia: 3,
-          hora: '8:30',
-          horaT: '12:30',
+          dia: [3],
+          hora: ['8:30'],
+          horaT: ['12:30'],
         },
       ];
       const scrapeResponse = await sigaScraper.scrapeCursada();

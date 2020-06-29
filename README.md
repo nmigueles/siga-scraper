@@ -34,15 +34,19 @@ Returns:
     curso: string, // Código del curso, ejemplo: K1021
     nombre: string, // Nombre del curso
     color: string, // Color del curso
-    dia: number, // Representación numérica de la semana.
-    hora: string, // Hora de la clase.
-    horaT: string, // Hora de finalización de la clase.
+    dia: number[], // Representación numérica del día de la semana.
+    hora: string[], // Hora de la clase.
+    horaT: string[], // Hora de finalización de la clase.
     turno: string, // 'Mañana' | 'Tarde' | 'Noche'
     aula: string, // Aula del curso.
     sede: string, // Sede en la que se dicta el curso.
   },
 ];
 ```
+
+> PD: El día y las horas son arrays ya que en el caso de que una asignatura se curse más de un día, se alinean los indices de los 3 arrays.
+
+> El día empieza en 1 => Lunes, hasta el 6 => Sabado, se excluye el Domingo.
 
 ### Scrape Notas
 
@@ -90,9 +94,9 @@ async function main() {
     sede: 'Campus',
     color: '#7A94CF',
     turno: 'Mañana',
-    dia: 3,
-    hora: '8:30',
-    horaT: '12:30',
+    dia: [3],
+    hora: ['8:30'],
+    horaT: ['12:30'],
   }, ...]
   */
   await sigaScraper.stop();

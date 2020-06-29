@@ -1,7 +1,8 @@
 import { Cluster } from 'puppeteer-cluster';
-import rgbtohex from './helpers/rgbtohex';
+
 import errors from './constants/errors';
-import { days, hours, shift } from './constants/times';
+import rgbtohex from './helpers/rgbtohex';
+import decomposeDate from './helpers/decomposeDate';
 
 import { Course, Nota, Notas } from './interfaces';
 
@@ -116,18 +117,10 @@ export = class sigaScraper {
         let turno: string = '';
 
         fechas.forEach((f) => {
-          const [
-            _,
-            diaCorto,
-            shift,
-            firstHour,
-            lastHour,
-          ] = /^(Lu|Ma|Mi|Ju|Vi|Sa)\(([mtn])\)([0-6]):([0-6])$/.exec(
-            f.replace('á', 'a'),
-          ) as string[];
-          dias.push(days[diaCorto]);
-          horas.push(hours[shift][firstHour].start);
-          horasT.push(hours[shift][lastHour].end);
+          const { day, start, finish, shift } = decomposeDate(f);
+          dias.push(day);
+          horas.push(start);
+          horasT.push(finish);
           turno = shift;
         });
         const sede =
@@ -138,11 +131,11 @@ export = class sigaScraper {
           nombre,
           aula,
           sede,
+          turno,
           color: rgbtohex(color),
-          turno: shift[turno],
-          dia: dias.length > 1 ? dias : dias[0],
-          hora: horas.length > 1 ? horas : horas[0],
-          horaT: horasT.length > 1 ? horasT : horasT[0],
+          dia: dias,
+          hora: horas,
+          horaT: horasT,
         };
         response.push(course);
       }
