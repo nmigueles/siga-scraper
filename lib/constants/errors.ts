@@ -1,5 +1,5 @@
 export default {
   invalidCredentialsErrorMessage: 'Las credenciales de logeo son invalidas.',
-  needToBeLogedErrorMessage:
+  loginRequiredErrorMessage:
     'Necesitas estar logeado para ejecutar esta función.',
 };

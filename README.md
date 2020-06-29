@@ -1,57 +1,65 @@
 # SIGA Scraper
 
-Herramienta para extraer información del SIGA FRBA de la UTN.
+Tool for scraping the SIGA FRBA website.
 
-## Métodos
+## Examples
+
+### QuickStart
+
+```typescript
+import sigaScraper from 'siga-scraper';
+
+async function main() {
+  await sigaScraper.start();
+  await sigaScraper.login(SIGA_USER, SIGA_PASS);
+
+  const response = await sigaScraper.scrapeCursada();
+
+  console.log(response);
+
+  await sigaScraper.stop();
+}
+
+main();
+```
+
+### Running tasks simultaneously
+
+```typescript
+import sigaScraper from 'siga-scraper';
+
+async function main() {
+  await sigaScraper.start(); // Inicia el cluster de navegadores que realizan el scrape.
+  await sigaScraper.login(SIGA_USER, SIGA_PASS); // Logea y guarda la session en el cluster.
+  const tasksPromises = [
+    sigaScraper.scrapeNotas(),
+    sigaScraper.scrapeCursada(),
+  ];
+  const [responseNotas, responseCursada] = await Promise.all(tasksPromises);
+
+  console.log(responseNotas); // => [ {...}, {...} ]
+  console.log(responseCursada); // => [ {...}, {...} ]
+}
+
+main();
+```
+
+## Methods
 
 - [Scrape Cursada](https://github.com/NicoMigueles/siga-scraper#scrape-cursada)
-- [Scrape Historial Consolidado](https://github.com/NicoMigueles/siga-scraper#scrape-historial-consolidado)
-
-## Ejemplos
-
-### Ejecutar un solo método
-
-```typescript
-import sigaScraper from 'siga-scraper';
-
-await sigaScraper.start(); // Inicia el cluster de navegadores que realizan el scrape.
-await sigaScraper.login(SIGA_USER, SIGA_PASS); // Logea y guarda la session en el cluster.
-
-const response = await sigaScraper.scrapeCursada(); // Ejecuta cualquier tarea, en este caso devuelve información de la cursada actual.
-
-console.log(response); // => [ {...}, {...} ]
-```
-
-### Ejecutar varios métodos
-
-```typescript
-import sigaScraper from 'siga-scraper';
-
-await sigaScraper.start(); // Inicia el cluster de navegadores que realizan el scrape.
-await sigaScraper.login(SIGA_USER, SIGA_PASS); // Logea y guarda la session en el cluster.
-const tareas = [
-  sigaScraper.scrapeCursada(),
-  sigaScraper.scrapeHistorialConsolidado(),
-];
-const [responseScrapeCursada, responseScrapeHistCons] = await Promise.all(
-  tareas,
-);
-
-console.log(responseScrapeCursada); // => [ {...}, {...} ]
-console.log(responseScrapeHistCons); // => [ {...}, {...} ]
-```
+- [Scrape Notas](https://github.com/NicoMigueles/siga-scraper#scrape-notas)
 
 ### Scrape Cursada
 
 ```typescript
-scrapeCursada() : Promise<Curso[]>,
+Method scrapeNotas : Promise<Course[]>,
 ```
 
 Returns:
-`Curso[]`
+`Course[]`
 
 ```typescript
-// Response Curso example.
+// Response example.
 [
   {
     courseId: string, // Id del curso interno del SIGA
@@ -61,48 +69,36 @@ Returns:
     notas: [
       {
         instancia: string, // Instancia de evaluación
-        calificacion: number, // Nota numerica. 0 .. 10, el 0 representa el ausente.
+        calificacion: number, // Nota, 0..10, el 0 representa el ausente.
       },
     ],
-    dia: number, // Representación numérica de la semana, zero-indexed.
+    dia: number, // Representación numérica de la semana.
     hora: string, // Hora de la clase.
     horaT: string, // Hora de finalización de la clase.
-    turno: Turno, // Turno del curso. enum('Mañana', 'Tarde', 'Noche')
+    turno: Turno, // enum('Mañana', 'Tarde', 'Noche')
     aula: string, // Aula del curso.
     sede: string, // Sede en la que se dicta el curso.
   },
 ];
 ```
 
-### Scrape Historial Consolidado
+### Scrape Notas
 
 ```typescript
-scrapeHistorialConsolidado() : Promise<RowEntry[]>,
+Method scrapeNotas : Promise<Notas[]>,
 ```
 
 Returns:
-`RowEntry[]`
+`Notas[]`
 
 ```typescript
-// Response RowEntry example.
+// Response example.
 [
-  {
-    tipo: 'Cursada' | 'Final',
-    estado: 'Aprob' | null,
-    plan: string, // Nombre del plan, ejemplo O95A (civil) o K08 (sistemas).
-    courseId: string, // Id del curso interno del SIGA
-    nombre: string, // Nombre del curso
-    year: number, // Año de la cursada
-    periodo: string, // Identificador del periodo
-    fecha: string | null, // DD/MM/AAAA
-    acta:
-      {
-        sede: string,
-        libro: string,
-        folio: number,
-        nota: number | null,
-      } | null,
-  },
+  name: 'Análisis Matemático I',
+  [{
+    instancia: string,
+    calificacion: number,
+  }],
 ];
 ```
 

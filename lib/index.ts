@@ -3,19 +3,7 @@ import rgbtohex from './helpers/rgbtohex';
 import errors from './constants/errors';
 import { days, hours, shift } from './constants/times';
 
-interface Course {
-  courseId: string;
-  curso: string;
-  nombre: string;
-  color: string;
-  notas: [];
-  dia: number | number[];
-  hora: string | string[];
-  horaT: string | string[];
-  turno: string;
-  aula: string;
-  sede: string;
-}
+import { Course, Nota, Notas } from './interfaces';
 
 export = class sigaScraper {
   private static cluster: Cluster;
@@ -36,7 +24,7 @@ export = class sigaScraper {
   }
 
   static async login(username: string, password: string) {
-    const loginURL = 'http://siga.frba.utn.edu.ar/try/sinap.do'; // 'http://localhost:8080/'
+    const loginURL = 'http://siga.frba.utn.edu.ar/try/sinap.do';
 
     const success: boolean = await this.cluster.execute(
       async ({ page }: { page: any }) => {
@@ -56,7 +44,8 @@ export = class sigaScraper {
   }
 
   static async scrapeHistorialConsolidado() {
-    if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
+    // TODO: Response formatting and interfacing.
+    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
 
     const historialConsolidadoPageUrl =
       'http://siga.frba.utn.edu.ar/alu/hist.do';
@@ -84,8 +73,8 @@ export = class sigaScraper {
     });
   }
 
-  static async scrapeCursadaBasic(): Promise<Course[]> {
-    if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
+  static async scrapeCursada(): Promise<Course[]> {
+    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
 
     const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/'; //
 
@@ -159,8 +148,8 @@ export = class sigaScraper {
     });
   }
 
-  static async scrapeCursada() {
-    if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
+  static async scrapeNotas(): Promise<Notas[]> {
+    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
 
     const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/';
 
@@ -189,24 +178,22 @@ export = class sigaScraper {
         const { name, selector } = subject;
 
         await Promise.all([page.click(selector), page.waitForNavigation()]);
-        /**
-         * Extrae las notas de la asignatura en cuestión.
-         * @returns {Object} notas
-         */
-        const notas = await page.evaluate(() => {
+
+        const notas: Nota[] = await page.evaluate(() => {
           const notasSpans = [...document.querySelectorAll('span.a-2')];
           if (notasSpans) {
-            const res: {
-              [key: string]: number;
-            } = {};
             const parciales = ['PP', 'PRPP', 'SRPP', 'SP', 'PRSP', 'SRSP'];
+            let res: Nota[] = [];
             parciales.forEach((instancia, i) => {
               const nota = notasSpans
                 .slice(i * 11, (i + 1) * 11)
                 .filter((n) => n.children[0].classList.contains('bold'));
               if (nota.length > 0) {
-                res[instancia] =
-                  Number((nota[0] as HTMLElement).innerText.trim()) || 0;
+                res.push({
+                  instancia,
+                  calificacion:
+                    Number((nota[0] as HTMLElement).innerText.trim()) || 0,
+                });
               }
             });
 
