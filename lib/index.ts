@@ -4,7 +4,7 @@ import errors from './constants/errors';
 import rgbtohex from './helpers/rgbtohex';
 import decomposeDate from './helpers/decomposeDate';
 
-import { Course, Nota, Notas } from './interfaces';
+import { Course, Nota, Notas, RowEntry, Acta } from './interfaces';
 
 const isTest: boolean = process.env.NODE_ENV === 'test';
 
@@ -46,17 +46,18 @@ export = class sigaScraper {
     this.isLogged = true;
   }
 
-  static async scrapeHistorialConsolidado() {
-    // TODO: Response formatting and interfacing.
-    if (!this.isLogged) throw new Error(errors.loginRequiredErrorMessage);
+  static async scrapeHistorialConsolidado(): Promise<RowEntry[]> {
+    if (!this.isLogged && !isTest)
+      throw new Error(errors.loginRequiredErrorMessage);
 
     const historialConsolidadoPageUrl =
       'http://siga.frba.utn.edu.ar/alu/hist.do';
+    const testUrl = 'https://mock-siga-scraper.netlify.app/histcon.html';
 
     return await this.cluster.execute(async ({ page }: { page: any }) => {
-      await page.goto(historialConsolidadoPageUrl);
+      await page.goto(isTest ? testUrl : historialConsolidadoPageUrl);
 
-      const subjects = await page.evaluate(
+      const rows: RowEntry[] = await page.evaluate(
         () =>
           [
             ...document.querySelectorAll(
@@ -64,15 +65,49 @@ export = class sigaScraper {
             ),
           ]
             .map((e) => {
-              const row: string[] = [];
-              [...(e as HTMLElement).querySelectorAll('td')].forEach((b) =>
-                row.push(b.innerText),
+              const [
+                tipo,
+                estado,
+                plan,
+                courseId,
+                nombre,
+                year,
+                periodo,
+                fecha,
+                sede,
+                libro,
+                folio,
+                nota,
+              ] = [...(e as HTMLElement).querySelectorAll('td')].map(
+                (b) => b.innerText,
               );
-              return row;
+              let acta: Acta | null;
+              if (libro == 'sin firma / promovido' || !libro) {
+                acta = null;
+              } else {
+                acta = {
+                  sede,
+                  libro,
+                  folio: folio,
+                  nota: nota ? Number(nota) : undefined,
+                };
+              }
+              return {
+                tipo,
+                estado,
+                plan,
+                courseId,
+                nombre,
+                year: Number(year),
+                periodo,
+                fecha,
+                acta,
+              };
             })
             .slice(2), // get rid of the header of the table.
       );
-      return subjects;
+
+      return rows;
     });
   }
 
