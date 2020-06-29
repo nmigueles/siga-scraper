@@ -3,7 +3,6 @@ export interface Course {
   curso: string;
   nombre: string;
   color: string;
-  notas: [];
   dia: number | number[];
   hora: string | string[];
   horaT: string | string[];

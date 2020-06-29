@@ -139,7 +139,6 @@ export = class sigaScraper {
           aula,
           sede,
           color: rgbtohex(color),
-          notas: [],
           turno: shift[turno],
           dia: dias.length > 1 ? dias : dias[0],
           hora: horas.length > 1 ? horas : horas[0],
