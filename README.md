@@ -1,51 +1,12 @@
 # SIGA Scraper
 
 [![Latest Stable Version](https://img.shields.io/npm/v/siga-scraper.svg)](https://www.npmjs.com/package/siga-scraper)
-[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/nicomigueles)
 
 Tool for scraping the SIGA FRBA website.
 
-## Examples
+## Support
 
-### QuickStart
-
-```typescript
-import sigaScraper from 'siga-scraper';
-
-async function main() {
-  await sigaScraper.start();
-  await sigaScraper.login(SIGA_USER, SIGA_PASS);
-
-  const response = await sigaScraper.scrapeCursada();
-
-  console.log(response);
-
-  await sigaScraper.stop();
-}
-
-main();
-```
-
-### Running tasks simultaneously
-
-```typescript
-import sigaScraper from 'siga-scraper';
-
-async function main() {
-  await sigaScraper.start(); // Inicia el cluster de navegadores que realizan el scrape.
-  await sigaScraper.login(SIGA_USER, SIGA_PASS); // Logea y guarda la session en el cluster.
-  const tasksPromises = [
-    sigaScraper.scrapeNotas(),
-    sigaScraper.scrapeCursada(),
-  ];
-  const [responseNotas, responseCursada] = await Promise.all(tasksPromises);
-
-  console.log(responseNotas); // => [ {...}, {...} ]
-  console.log(responseCursada); // => [ {...}, {...} ]
-}
-
-main();
-```
+[![Invitame un café en cafecito.app](https://cdn.cafecito.app/imgs/buttons/button_5.svg)](https://cafecito.app/nicomigueles)
 
 ## Methods
 
@@ -103,6 +64,50 @@ Returns:
     calificacion: number,
   }],
 ];
+```
+
+## Examples
+
+### QuickStart
+
+```typescript
+import sigaScraper from 'siga-scraper';
+
+async function main() {
+  await sigaScraper.start();
+  await sigaScraper.login(SIGA_USER, SIGA_PASS);
+
+  const response = await sigaScraper.scrapeCursada();
+
+  console.log(response);
+
+  await sigaScraper.stop();
+}
+
+main();
+```
+
+### Running tasks simultaneously
+
+```typescript
+import sigaScraper from 'siga-scraper';
+
+async function main() {
+  await sigaScraper.start(); // Inicia el cluster de navegadores que realizan el scrape.
+  await sigaScraper.login(SIGA_USER, SIGA_PASS); // Logea y guarda la session en el cluster.
+  const tasksPromises = [
+    sigaScraper.scrapeNotas(),
+    sigaScraper.scrapeCursada(),
+  ];
+  const [responseNotas, responseCursada] = await Promise.all(tasksPromises);
+
+  console.log(responseNotas); // => [ {...}, {...} ]
+  console.log(responseCursada); // => [ {...}, {...} ]
+
+  await sigaScraper.stop();
+}
+
+main();
 ```
 
 # License
