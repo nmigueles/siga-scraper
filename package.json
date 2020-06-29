@@ -1,9 +1,12 @@
 {
   "name": "siga-scraper",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Tool to scrape information from SIGA FRBA UTN.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest --detectOpenHandles --forceExit --verbose"
@@ -32,7 +35,8 @@
   },
   "homepage": "https://github.com/NicoMigueles/siga-scraper#readme",
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|tsx)?$"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
