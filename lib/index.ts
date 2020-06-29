@@ -17,7 +17,7 @@ interface Course {
   sede: string;
 }
 
-export default class sigaScraper {
+export = class sigaScraper {
   private static cluster: Cluster;
   private static isLogged: boolean = false;
 
@@ -84,7 +84,7 @@ export default class sigaScraper {
     });
   }
 
-  static async scrapeCursadaBasic() {
+  static async scrapeCursadaBasic(): Promise<Course[]> {
     if (!this.isLogged) throw new Error(errors.needToBeLogedErrorMessage);
 
     const cursadaPageUrl = 'http://siga.frba.utn.edu.ar/alu/horarios.do'; // 'https://www.luismigueles.com.ar/test/siga/'; //
@@ -232,4 +232,4 @@ export default class sigaScraper {
       return response;
     });
   }
-}
+};

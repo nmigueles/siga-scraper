@@ -25,7 +25,7 @@ describe('Basic', () => {
     await sigaScraper.stop();
   }, 60000);
 
-  test('Login and scraping academic history', async (done) => {
+  xtest('Login and scraping academic history', async (done) => {
     try {
       await sigaScraper.start();
       await sigaScraper.login(SIGA_USER!, SIGA_PASS!);
