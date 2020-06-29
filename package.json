@@ -1,6 +1,6 @@
 {
-  "name": "@nicomigueles/siga-scraper",
-  "version": "1.0.0",
+  "name": "siga-scraper",
+  "version": "1.0.1",
   "description": "Tool to scrape information from SIGA FRBA UTN.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -22,9 +22,6 @@
     "siga",
     "siga-scraper"
   ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "author": {
     "name": "Nicolás Migueles",
     "email": "nicolasmigueles99@gmail.com"
