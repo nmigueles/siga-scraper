@@ -139,7 +139,6 @@ export = class sigaScraper {
           aula,
           sede,
           color: rgbtohex(color),
-          notas: [],
           turno: shift[turno],
           dia: dias.length > 1 ? dias : dias[0],
           hora: horas.length > 1 ? horas : horas[0],
@@ -168,20 +167,20 @@ export = class sigaScraper {
             'tbody > tr > td > span:nth-child(1) > a',
           ),
         ].map((e, i) => {
-          const name = `${
-            (e as HTMLElement).onclick!.toString().split(`'`)[5]
-          }`;
+          const onclickData = (e as HTMLElement).onclick!.toString().split(`'`);
+          const courseId = onclickData[3];
+          const name = onclickData[5];
           const selector = `tbody > tr:nth-child(${
             2 * i + 3
           }) > td > span:nth-child(2) > a`;
-          return { name, selector };
+          return { courseId, name, selector };
         }),
       );
 
       const response = [];
       // Por cada asignatura, buscar las notas.
       for await (const subject of subjects) {
-        const { name, selector } = subject;
+        const { courseId, name, selector } = subject;
 
         await Promise.all([page.click(selector), page.waitForNavigation()]);
 
@@ -220,7 +219,7 @@ export = class sigaScraper {
           }),
         ]);
 
-        response.push({ name, notas });
+        response.push({ courseId, name, notas });
       }
       return response;
     });
