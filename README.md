@@ -16,6 +16,7 @@ Tool to retrieve information from the SIGA FRBA UTN website.
 
 - [Scrape Cursada](https://github.com/NicoMigueles/siga-scraper#scrape-cursada)
 - [Scrape Notas](https://github.com/NicoMigueles/siga-scraper#scrape-notas)
+- [Scrape Historial Consolidado](https://github.com/NicoMigueles/siga-scraper#scrape-historial-consolidado)
 
 ### Scrape Cursada
 
@@ -69,6 +70,56 @@ Returns:
     }
   ],
 ];
+```
+
+### Scrape Historial Consolidado
+
+```typescript
+scrapeHistorialConsolidado() : Promise<RowEntry[]>,
+```
+
+Returns:
+`RowEntry[]`
+
+```typescript
+// Response RowEntry example.
+
+export interface Acta {
+  sede: string;
+  libro: string;
+  folio: string;
+  nota?: number;
+}
+
+export interface RowEntry {
+  tipo: string; // 'Cursada' | 'Final';
+  estado: string;
+  plan: string; // Nombre del plan, ejemplo O95A (civil) o K08 (sistemas).
+  courseId: string; // Id del curso interno del SIGA
+  nombre: string; // Nombre del curso
+  year: number; // Año de la cursada
+  periodo: string; // Identificador del periodo
+  fecha: string; // DD/MM/AAAA
+  acta: Acta | null;
+}
+/*
+{
+  "tipo": "Final",
+  "estado": "Aprob",
+  "plan": "K08",
+  "courseId": "950701",
+  "nombre": "Álgebra y Geometría Analítica",
+  "year": 2018,
+  "periodo": "K08 Anual",
+  "fecha": "29/11/2018",
+  "acta": {
+    "sede": "FRBA",
+    "libro": "PR045",
+    "folio": "180",
+    "nota": 8
+  }
+}
+*/
 ```
 
 ## Examples

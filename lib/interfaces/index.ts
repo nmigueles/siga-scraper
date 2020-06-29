@@ -20,3 +20,22 @@ export interface Notas {
   name: string;
   notas: Nota[];
 }
+
+export interface Acta {
+  sede: string;
+  libro: string;
+  folio: string;
+  nota?: number;
+}
+
+export interface RowEntry {
+  tipo: string; // 'Cursada' | 'Final';
+  estado: string;
+  plan: string; // Nombre del plan, ejemplo O95A (civil) o K08 (sistemas).
+  courseId: string; // Id del curso interno del SIGA
+  nombre: string; // Nombre del curso
+  year: number; // Año de la cursada
+  periodo: string; // Identificador del periodo
+  fecha: string | null; // DD/MM/AAAA
+  acta: Acta | null;
+}
