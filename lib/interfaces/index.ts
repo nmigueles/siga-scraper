@@ -39,3 +39,12 @@ export interface RowEntry {
   fecha: string | null; // DD/MM/AAAA
   acta: Acta | null;
 }
+
+export interface ActaFinal {
+  fecha: string;
+  courseId: string;
+  nombre: string;
+  libro: string;
+  folio: string;
+  nota: number;
+}

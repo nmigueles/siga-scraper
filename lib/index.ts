@@ -1,10 +1,11 @@
 import { Cluster } from 'puppeteer-cluster';
 
 import errors from './constants/errors';
+
 import rgbtohex from './helpers/rgbtohex';
 import decomposeDate from './helpers/decomposeDate';
 
-import { Course, Nota, Notas, RowEntry, Acta } from './interfaces';
+import { Course, Nota, Notas, RowEntry, Acta, ActaFinal } from './interfaces';
 
 const isTest: boolean = process.env.NODE_ENV === 'test';
 
@@ -17,10 +18,11 @@ export = class sigaScraper {
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: 4,
       puppeteerOptions: {
-        headless: true,
+        headless: false,
       },
     });
   }
+
   static async stop() {
     await this.cluster.idle();
     await this.cluster.close();
@@ -250,6 +252,44 @@ export = class sigaScraper {
         response.push({ courseId, name, notas });
       }
       return response;
+    });
+  }
+
+  static async scrapeActaDeFinales(): Promise<ActaFinal[]> {
+    if (!this.isLogged && !isTest)
+      throw new Error(errors.loginRequiredErrorMessage);
+
+    const historialConsolidadoPageUrl =
+      'http://siga.frba.utn.edu.ar/alu/acfin.do';
+    const testUrl = 'https://mock-siga-scraper.netlify.app/acfin.html';
+
+    return await this.cluster.execute(async ({ page }: { page: any }) => {
+      await page.goto(isTest ? testUrl : historialConsolidadoPageUrl);
+
+      const rows: ActaFinal[] = await page.evaluate(
+        () =>
+          [
+            ...document.querySelectorAll(
+              'body > div.std-desktop > div.std-desktop-desktop > form > div > div:nth-child(3) > div > table > tbody > tr',
+            ),
+          ]
+            .map((e) => {
+              const [fecha, courseId, nombre, libro, folio, nota] = [
+                ...(e as HTMLElement).querySelectorAll('td'),
+              ].map((b) => b.innerText);
+              return {
+                fecha,
+                courseId,
+                nombre,
+                libro,
+                folio,
+                nota: Number(nota) || 0,
+              };
+            })
+            .slice(1), // get rid of the header of the table.;,
+      );
+
+      return rows;
     });
   }
 };
