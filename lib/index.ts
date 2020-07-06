@@ -18,7 +18,7 @@ export = class sigaScraper {
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: 4,
       puppeteerOptions: {
-        headless: false,
+        headless: true,
       },
     });
   }
