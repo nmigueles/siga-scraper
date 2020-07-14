@@ -1,11 +1,13 @@
 import sigaScraper from '..';
-import { RowEntry } from '../interfaces';
+import { RowEntry, ActaFinal } from '../interfaces';
+
+beforeAll(async () => {
+  await sigaScraper.start();
+});
 
 describe('Scrape Cursada', () => {
   test('Deberia devolver un array de con informacion acerca asignaturas.', async (done) => {
     try {
-      await sigaScraper.start();
-
       const expected = [
         {
           courseId: '950703',
@@ -43,16 +45,12 @@ describe('Scrape Cursada', () => {
       console.log(error);
       done.fail(error);
     }
-
-    await sigaScraper.stop();
   }, 60000);
 });
 
 describe('Scrape Notas', () => {
   test('Deberia devolver un array de asignaturas con sus notas.', async (done) => {
     try {
-      await sigaScraper.start();
-
       const expected = [
         {
           courseId: '950703',
@@ -97,8 +95,6 @@ describe('Scrape Notas', () => {
     } catch (error) {
       console.log(error);
       done.fail(error);
-    } finally {
-      await sigaScraper.stop();
     }
   }, 60000);
 });
@@ -106,7 +102,6 @@ describe('Scrape Notas', () => {
 describe('Scrape Historial Consolidado', () => {
   test('Deberia devolver un array de las filas del historial consolidado.', async (done) => {
     try {
-      await sigaScraper.start();
       const expected: RowEntry[] = [
         {
           tipo: 'Cursada',
@@ -188,8 +183,48 @@ describe('Scrape Historial Consolidado', () => {
     } catch (error) {
       console.log(error);
       done.fail(error);
-    } finally {
-      await sigaScraper.stop();
+    }
+  }, 60000);
+});
+
+describe('Scrape Actas de Final', () => {
+  test('Deberia devolver un array con las actas de final.', async (done) => {
+    try {
+      const expected: ActaFinal[] = [
+        {
+          fecha: '01/01/2020',
+          courseId: '000000',
+          nombre: 'Asignatura 1',
+          libro: 'AA001',
+          folio: '33',
+          nota: 10,
+        },
+        {
+          fecha: '01/01/2020',
+          courseId: '000001',
+          nombre: 'Asignatura 2',
+          libro: 'AA002',
+          folio: '44',
+          nota: 9,
+        },
+        {
+          fecha: '01/01/2020',
+          courseId: '000002',
+          nombre: 'Asignatura 3',
+          libro: 'AA003',
+          folio: '55',
+          nota: 8,
+        },
+      ];
+      const scrapeResponse: ActaFinal[] = await sigaScraper.scrapeActaDeFinales();
+
+      expect(scrapeResponse instanceof Array).toBeTruthy();
+      expect(scrapeResponse).toEqual(expected);
+
+      done();
+    } catch (error) {
+      console.log(error);
+      done.fail(error);
     }
   }, 60000);
 });

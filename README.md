@@ -122,6 +122,39 @@ export interface RowEntry {
 */
 ```
 
+### Scrape Actas de Final
+
+```typescript
+scrapeActaDeFinales() : Promise<ActaFinal[]>,
+```
+
+Returns:
+`ActaFinal[]`
+
+```typescript
+// Response example.
+
+export interface ActaFinal {
+  fecha: string;
+  courseId: string;
+  nombre: string;
+  libro: string;
+  folio: string;
+  nota: number;
+}
+
+/*
+  {
+    "fecha": "01/01/2020",
+    "courseId": "000000",
+    "nombre": "Asignatura 1",
+    "libro": "AA001",
+    "folio": "33",
+    "nota": "10"
+  },
+*/
+```
+
 ## Examples
 
 ### QuickStart
@@ -185,4 +218,4 @@ Pull request are open and welcome.
 
 # License
 
-- [MIT License.](https://github.com/nicomigueles/siga-scraper/blob/master/license)
+- [MIT License.](https://github.com/nicomigueles/siga-scraper/blob/master/LICENSE)
