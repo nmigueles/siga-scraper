@@ -1,4 +1,5 @@
 import { Cluster } from 'puppeteer-cluster';
+import { LaunchOptions } from 'puppeteer';
 
 import errors from './constants/errors';
 import rgbtohex from './helpers/rgbtohex';
@@ -12,11 +13,11 @@ export = class sigaScraper {
   private static cluster: Cluster;
   private static isLogged: boolean = false;
 
-  static async start() {
+  static async start(puppeteerOptions?: LaunchOptions) {
     this.cluster = await Cluster.launch({
       concurrency: Cluster.CONCURRENCY_PAGE,
       maxConcurrency: 4,
-      puppeteerOptions: {
+      puppeteerOptions: puppeteerOptions || {
         headless: true,
       },
     });
