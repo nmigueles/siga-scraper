@@ -52,6 +52,6 @@
   "dependencies": {
     "@types/puppeteer": "^3.0.1",
     "puppeteer-cluster": "^0.21.0",
-    "puppeteer": "^3.3.0"
+    "puppeteer": "^2.1.1"
   }
 }
