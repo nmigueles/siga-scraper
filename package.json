@@ -1,6 +1,6 @@
 {
   "name": "siga-scraper",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Tool to scrape information from SIGA FRBA UTN.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
