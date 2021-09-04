@@ -1,3 +1,5 @@
+Archived bc UTN now uses SIU Guaraní.
+
 # SIGA Scraper
 
 [![Latest Stable Version](https://img.shields.io/npm/v/siga-scraper.svg)](https://www.npmjs.com/package/siga-scraper)
